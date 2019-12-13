@@ -37,4 +37,6 @@ workflows:
   check_and_build:
     jobs:
       - check
-      - create_images
+      - create_images:
+          requires:
+            - check
