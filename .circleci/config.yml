@@ -27,7 +27,7 @@ jobs:
       - run:
           name: Build
           no_output_timeout: 20m
-          command: docker build -t umutphp/docker-slim-for-ci - < ~/Dockerfile
+          command: docker build -t umutphp/docker-slim-for-ci - < Dockerfile
       - run:
           name: Push
           no_output_timeout: 20m
