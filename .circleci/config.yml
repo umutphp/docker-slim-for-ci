@@ -1,0 +1,40 @@
+# Javascript Node CircleCI 2.0 configuration file
+#
+# Check https://circleci.com/docs/2.0/language-javascript/ for more details
+#
+version: 2
+jobs:
+  check:
+    docker:
+      - image: circleci/node:7.10
+    working_directory: ~/repo
+    steps:
+      - checkout
+      - run:
+          name: Install-DockerLint
+          command: sudo npm install -g dockerlint
+      - run:
+          name: DockerLint
+          command: dockerlint Dockerfile
+  create_images:
+    working_directory: ~/repo
+    machine: true
+    steps:
+      - checkout
+      - run:
+          name: DockerLogin
+          command: docker login -u $DOCKER_USER -p $DOCKER_PASS
+      - run:
+          name: Build
+          no_output_timeout: 20m
+          command: docker build -t umutphp/docker-slim-for-ci - < ~/Dockerfile
+      - run:
+          name: Push
+          no_output_timeout: 20m
+          command: docker push umutphp/docker-slim-for-ci
+workflows:
+  version: 2
+  check_and_build:
+    jobs:
+      - check
+      - create_images
